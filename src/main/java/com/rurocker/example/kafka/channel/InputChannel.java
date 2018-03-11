@@ -1,5 +1,6 @@
 package com.rurocker.example.kafka.channel;
 
+import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.messaging.SubscribableChannel;
 
 /**
@@ -9,5 +10,6 @@ import org.springframework.messaging.SubscribableChannel;
  */
 public interface InputChannel {
 
+	@Input("counterSinkChannel")
 	SubscribableChannel counter();
 }
