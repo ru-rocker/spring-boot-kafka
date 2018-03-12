@@ -38,7 +38,7 @@ public class CounterSourceBean {
 
 	public boolean sendCounterMessageWithHeader(CounterDto counterDto, String counterHeader) throws JsonProcessingException {
 		String json = objectMapper.writeValueAsString(counterDto);
-		logger.info("Send counter {}", json);
+		logger.info("Send counter {} with header {}", json, counterHeader);
 		return outputChannel.counter()
 				.send(MessageBuilder.withPayload(counterDto).setHeader("counterHeader", counterHeader).build());
 	}

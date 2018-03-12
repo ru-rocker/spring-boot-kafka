@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rurocker.example.kafka.dto.CounterDto;
 import com.rurocker.example.kafka.event.CounterSourceBean;
 
@@ -25,15 +24,15 @@ public class CounterController {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	private AtomicInteger atomicInteger;
+	private AtomicInteger atomicInteger = new AtomicInteger();
 
 	@Autowired
 	private CounterSourceBean counterSourceBean;
 
 	@GetMapping(path = "/counter")
 	public CounterDto getCounter(@RequestParam("message") String message,
-			@RequestParam("counterHeader") String counterHeader) throws IOException {
-		int counter = atomicInteger.get();
+			@RequestParam(name = "counterHeader", required = false) String counterHeader) throws IOException {
+		int counter = atomicInteger.incrementAndGet();
 		logger.info("Get Counter request with message {}, counter {} and header {}", message, counter, counterHeader);
 		CounterDto dto = new CounterDto();
 		dto.setMessage(message);
@@ -44,7 +43,6 @@ public class CounterController {
 
 		} else {
 			counterSourceBean.sendCounterMessageWithHeader(dto, counterHeader);
-
 		}
 
 		return dto;
